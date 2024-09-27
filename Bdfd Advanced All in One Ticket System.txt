@@ -1,0 +1,733 @@
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+DONT FEEL FREE TO PING ME IN SUPPORT, I WONT HELP (joke)
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Bdfd Ticket System by WhaThaDogDoing, Inspired from Berk's !ticket and UltimisMc bot's selection panel
+
+Claim leaderboard code's credit: Xloxn#4050
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Variables Needed:
+1) tickets
+   Value: 0
+
+2) ticketstaff
+   Value: <Your staff role id>
+
+3) ticketcategory
+   Value: <ticket category's id>
+
+
+4) userticket
+   Value: null (leave it empty)
+
+5) des
+   Value: (ticket discription you want)
+
+6) log
+   Value: (log channel id)
+
+7) whoclaimed
+   Value: null (leave it empty)
+
+8) claimed
+   Value: 0
+
+9) claim
+   Value: 0
+
+10) ticketsystem
+   Value: yes
+
+11) ticketbypass
+    Value: TICKET BYPASS ROLE ID
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TICKET MENU:
+Trigger: anything you like
+Code:
+$nomention
+$onlyAdmin[nah]
+$title[Create a Ticket!]
+$image[https://i.imgur.com/YxlQphp.png]
+$description[$getServerVar[des]]
+$footer[By: $username] $addTimestamp
+$footerIcon[$serverIcon]
+$color[ff0000]
+$addButton[no;create;Create a Ticket;primary;;📩]
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TICKET SELECTION MSG:
+Trigger: $onInteraction[create]
+Code:
+$nomention
+$removeButtons
+$ephemeral
+$description[
+Please select the Reason you Wanted to Open the Ticket!]
+$addButton[no;Support;Support;primary]
+$addButton[no;Report;Report;primary]
+$addButton[no;B-Report;B-Report;primary]
+$addButton[no;Appeal;Appeal;primary]
+$addButton[no;Media;Media;primary]
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TICKET CREATION
+Trigger: $onInteraction
+Code:
+$nomention
+$if[$customID==Support]
+$if[$channelExists[$getUserVar[userticket]]==true]
+$if[$checkContains[$channelTopic[$getUserVar[userticket]];Closed & Saved]==false]
+$onlyIf[2==5;] $c[don't delete this, it's actually important]
+$deleteIn[2]
+$endif
+$endif
+$c[This creates the ticket]
+$async[ticket1]
+$if[$getServerVar[ticketcategory]==]
+$createChannel[ticket-00$sum[$getServerVar[tickets];1];text]
+$else
+$createChannel[ticket-00$sum[$getServerVar[tickets];1];text;$getServerVar[ticketcategory]]
+$endif
+$endasync
+$await[ticket1]
+$c[This sends an embed into the ticket]
+$setUserVar[userticket;$channelID[ticket-00$sum[$getServerVar[tickets];1]]]
+$c[This changes the ticket description, don't touch this, or the code may break]
+$if[$getServerVar[ticketcategory]!=]
+$modifyChannel[$channelID[ticket-00$sum[$getServerVar[tickets];1]];!unchanged;Ticket opened by "$username[$authorID]#$discriminator[$authorID]";no;!unchanged]
+$else
+$modifyChannel[$channelID[ticket-00$sum[$getServerVar[tickets];1]];!unchanged;Ticket opened by "$username[$authorID]#$discriminator[$authorID]";no;!unchanged;$getServerVar[ticketcategory]]
+$endif
+$c[This sets the ticket permissions]
+$modifyChannelPerms[$channelID[ticket-00$sum[$getServerVar[tickets];1]];-readmessages;$guildID] $c[This deny the permission to view the ticket to everyone]
+$editChannelPerms[$channelID[ticket-00$sum[$getServerVar[tickets];1]];$authorID;+readmessages;+sendmessages] $c[This allows the permission to view the ticket to the user that creates the ticket]
+$if[$roleExists[$getServerVar[ticketstaff]]==true] $c[This checks if the staff role has been set... and if it exists then...]
+$modifyChannelPerms[$channelID[ticket-00$sum[$getServerVar[tickets];1]];+readmessages;$getServerVar[ticketstaff]] $c[This allows the permission to view the ticket to the staff role]
+$endif
+$c[This sets the tickets amount variable, it's more important than you think so don't delete it :)]
+$setServerVar[tickets;$sum[$getServerVar[tickets];1]]
+$endif
+
+$if[$customID==Report]
+
+$c[Restrictions: Ticket Disabled]
+$c[If the system is disabled, then the command won't work and it will return the error after the ";"]
+$onlyIf[$getServerVar[ticketsystem]!=no;Sorry! the ticket system is disabled on this server, tell an admin to type +enable-tickets to enable it!]
+$c[Restrictions: Permissions]
+$c[If the bot don't have Manage Channels permissions to create the ticket channel, it will return the error after the ";"]
+$onlyBotPerms[managechannels;Sorry! I don't have enough permissions to create the ticket, tell an admin to give me "manage channels" permissions!]
+$c[Restrictions: Tickets limit]
+$c[If the user already has a ticket created, then it will return an error]
+$c[Checkers: variables]
+$varExistError[ticketsystem;Please create the variable "ticketsystem" in the app, with value "no", of course without quote symbols]
+$varExistError[tickets;Please create the variable "tickets" in the app, with value "0", of course without quote symbols]
+$varExistError[ticketcategory;Please create the variable "ticketcategory" in the app, without any value]
+$varExistError[ticketstaff;Please create the variable "ticketstaff" in the app, without any value]
+$varExistError[userticket;Please create the variable "userticket" in the app, without any value]
+$if[$channelExists[$getUserVar[userticket]]==true]
+$if[$checkContains[$channelTopic[$getUserVar[userticket]];Closed & Saved]==false]
+$onlyIf[2==5;] $c[don't delete this, it's actually important]
+$deleteIn[2]
+$endif
+$endif
+$c[This creates the ticket]
+$async[ticket1]
+$if[$getServerVar[ticketcategory]==]
+$createChannel[ticket-00$sum[$getServerVar[tickets];1];text]
+$else
+$createChannel[ticket-00$sum[$getServerVar[tickets];1];text;$getServerVar[ticketcategory]]
+$endif
+$endasync
+$await[ticket1]
+$c[This sends an embed into the ticket]
+$setUserVar[userticket;$channelID[ticket-00$sum[$getServerVar[tickets];1]]]
+$c[This changes the ticket description, don't touch this, or the code may break]
+$if[$getServerVar[ticketcategory]!=]
+$modifyChannel[$channelID[ticket-00$sum[$getServerVar[tickets];1]];!unchanged;Ticket opened by "$username[$authorID]#$discriminator[$authorID]";no;!unchanged]
+$else
+$modifyChannel[$channelID[ticket-00$sum[$getServerVar[tickets];1]];!unchanged;Ticket opened by "$username[$authorID]#$discriminator[$authorID]";no;!unchanged;$getServerVar[ticketcategory]]
+$endif
+$c[This sets the ticket permissions]
+$modifyChannelPerms[$channelID[ticket-00$sum[$getServerVar[tickets];1]];-readmessages;$guildID] $c[This deny the permission to view the ticket to everyone]
+$editChannelPerms[$channelID[ticket-00$sum[$getServerVar[tickets];1]];$authorID;+readmessages;+sendmessages]
+$if[$roleExists[$getServerVar[ticketstaff]]==true] $c[This checks if the staff role has been set... and if it exists then...]
+$modifyChannelPerms[$channelID[ticket-00$sum[$getServerVar[tickets];1]];+readmessages;$getServerVar[ticketstaff]] $c[This allows the permission to view the ticket to the staff role]
+$endif
+$c[This sets the tickets amount variable, it's more important than you think so don't delete it :)]
+$setServerVar[tickets;$sum[$getServerVar[tickets];1]]
+$endif
+
+$if[$customID==B-Report]
+
+$c[Restrictions: Ticket Disabled]
+$c[If the system is disabled, then the command won't work and it will return the error after the ";"]
+$onlyIf[$getServerVar[ticketsystem]!=no;Sorry! the ticket system is disabled on this server, tell an admin to type +enable-tickets to enable it!]
+$c[Restrictions: Permissions]
+$c[If the bot don't have Manage Channels permissions to create the ticket channel, it will return the error after the ";"]
+$onlyBotPerms[managechannels;Sorry! I don't have enough permissions to create the ticket, tell an admin to give me "manage channels" permissions!]
+$c[Restrictions: Tickets limit]
+$c[If the user already has a ticket created, then it will return an error]
+$c[Checkers: variables]
+$varExistError[ticketsystem;Please create the variable "ticketsystem" in the app, with value "no", of course without quote symbols]
+$varExistError[tickets;Please create the variable "tickets" in the app, with value "0", of course without quote symbols]
+$varExistError[ticketcategory;Please create the variable "ticketcategory" in the app, without any value]
+$varExistError[ticketstaff;Please create the variable "ticketstaff" in the app, without any value]
+$varExistError[userticket;Please create the variable "userticket" in the app, without any value]
+$if[$channelExists[$getUserVar[userticket]]==true]
+$if[$checkContains[$channelTopic[$getUserVar[userticket]];Closed & Saved]==false]
+$onlyIf[2==5;] $c[don't delete this, it's actually important]
+$deleteIn[2]
+$endif
+$endif
+$c[This creates the ticket]
+$async[ticket1]
+$if[$getServerVar[ticketcategory]==]
+$createChannel[ticket-00$sum[$getServerVar[tickets];1];text]
+$else
+$createChannel[ticket-00$sum[$getServerVar[tickets];1];text;$getServerVar[ticketcategory]]
+$endif
+$endasync
+$await[ticket1]
+$c[This sends an embed into the ticket]
+$setUserVar[userticket;$channelID[ticket-00$sum[$getServerVar[tickets];1]]]
+$c[This changes the ticket description, don't touch this, or the code may break]
+$if[$getServerVar[ticketcategory]!=]
+$modifyChannel[$channelID[ticket-00$sum[$getServerVar[tickets];1]];!unchanged;Ticket opened by "$username[$authorID]#$discriminator[$authorID]";no;!unchanged]
+$else
+$modifyChannel[$channelID[ticket-00$sum[$getServerVar[tickets];1]];!unchanged;Ticket opened by "$username[$authorID]#$discriminator[$authorID]";no;!unchanged;$getServerVar[ticketcategory]]
+$endif
+$c[This sets the ticket permissions]
+$modifyChannelPerms[$channelID[ticket-00$sum[$getServerVar[tickets];1]];-readmessages;$guildID] $c[This deny the permission to view the ticket to everyone]
+$editChannelPerms[$channelID[ticket-00$sum[$getServerVar[tickets];1]];$authorID;+readmessages;+sendmessages]
+$if[$roleExists[$getServerVar[ticketstaff]]==true] $c[This checks if the staff role has been set... and if it exists then...]
+$modifyChannelPerms[$channelID[ticket-00$sum[$getServerVar[tickets];1]];+readmessages;$getServerVar[ticketstaff]] $c[This allows the permission to view the ticket to the staff role]
+$endif
+$c[This sets the tickets amount variable, it's more important than you think so don't delete it :)]
+$setServerVar[tickets;$sum[$getServerVar[tickets];1]]
+$endif
+
+$if[$customID==Appeal]
+
+$c[Restrictions: Ticket Disabled]
+$c[If the system is disabled, then the command won't work and it will return the error after the ";"]
+$onlyIf[$getServerVar[ticketsystem]!=no;Sorry! the ticket system is disabled on this server, tell an admin to enable it!]
+$c[Restrictions: Permissions]
+$c[If the bot don't have Manage Channels permissions to create the ticket channel, it will return the error after the ";"]
+$onlyBotPerms[managechannels;Sorry! I don't have enough permissions to create the ticket, tell an admin to give me "manage channels" permissions!]
+$c[Restrictions: Tickets limit]
+$c[If the user already has a ticket created, then it will return an error]
+$c[Checkers: variables]
+$varExistError[ticketsystem;Please create the variable "ticketsystem" in the app, with value "no", of course without quote symbols]
+$varExistError[tickets;Please create the variable "tickets" in the app, with value "0", of course without quote symbols]
+$varExistError[ticketcategory;Please create the variable "ticketcategory" in the app, without any value]
+$varExistError[ticketstaff;Please create the variable "ticketstaff" in the app, without any value]
+$varExistError[userticket;Please create the variable "userticket" in the app, without any value]
+$if[$channelExists[$getUserVar[userticket]]==true]
+$if[$checkContains[$channelTopic[$getUserVar[userticket]];Closed & Saved]==false]
+$onlyIf[2==5;] $c[don't delete this, it's actually important]
+$deleteIn[2]
+$endif
+$endif
+$c[This creates the ticket]
+$async[ticket1]
+$if[$getServerVar[ticketcategory]==]
+$createChannel[ticket-00$sum[$getServerVar[tickets];1];text]
+$else
+$createChannel[ticket-00$sum[$getServerVar[tickets];1];text;$getServerVar[ticketcategory]]
+$endif
+$endasync
+$await[ticket1]
+$c[This sends an embed into the ticket]
+$setUserVar[userticket;$channelID[ticket-00$sum[$getServerVar[tickets];1]]]
+$c[This changes the ticket description, don't touch this, or the code may break]
+$if[$getServerVar[ticketcategory]!=]
+$modifyChannel[$channelID[ticket-00$sum[$getServerVar[tickets];1]];!unchanged;Ticket opened by "$username[$authorID]#$discriminator[$authorID]";no;!unchanged]
+$else
+$modifyChannel[$channelID[ticket-00$sum[$getServerVar[tickets];1]];!unchanged;Ticket opened by "$username[$authorID]#$discriminator[$authorID]";no;!unchanged;$getServerVar[ticketcategory]]
+$endif
+$c[This sets the ticket permissions]
+$modifyChannelPerms[$channelID[ticket-00$sum[$getServerVar[tickets];1]];-readmessages;$guildID] $c[This deny the permission to view the ticket to everyone]
+$editChannelPerms[$channelID[ticket-00$sum[$getServerVar[tickets];1]];$authorID;+readmessages;+sendmessages]
+$if[$roleExists[$getServerVar[ticketstaff]]==true] $c[This checks if the staff role has been set... and if it exists then...]
+$modifyChannelPerms[$channelID[ticket-00$sum[$getServerVar[tickets];1]];+readmessages;$getServerVar[ticketstaff]] $c[This allows the permission to view the ticket to the staff role]
+$endif
+$c[This sets the tickets amount variable, it's more important than you think so don't delete it :)]
+$setServerVar[tickets;$sum[$getServerVar[tickets];1]]
+$endif
+
+$if[$customID==Media]
+
+$c[Restrictions: Ticket Disabled]
+$c[If the system is disabled, then the command won't work and it will return the error after the ";"]
+$onlyIf[$getServerVar[ticketsystem]!=no;Sorry! the ticket system is disabled on this server, tell an admin to type +enable-tickets to enable it!]
+$c[Restrictions: Permissions]
+$c[If the bot don't have Manage Channels permissions to create the ticket channel, it will return the error after the ";"]
+$onlyBotPerms[managechannels;Sorry! I don't have enough permissions to create the ticket, tell an admin to give me "manage channels" permissions!]
+$c[Restrictions: Tickets limit]
+$c[If the user already has a ticket created, then it will return an error]
+$c[Checkers: variables]
+$varExistError[ticketsystem;Please create the variable "ticketsystem" in the app, with value "no", of course without quote symbols]
+$varExistError[tickets;Please create the variable "tickets" in the app, with value "0", of course without quote symbols]
+$varExistError[ticketcategory;Please create the variable "ticketcategory" in the app, without any value]
+$varExistError[ticketstaff;Please create the variable "ticketstaff" in the app, without any value]
+$varExistError[userticket;Please create the variable "userticket" in the app, without any value]
+$if[$channelExists[$getUserVar[userticket]]==true]
+$if[$checkContains[$channelTopic[$getUserVar[userticket]];Closed & Saved]==false]
+$onlyIf[2==5;] $c[don't delete this, it's actually important]
+$deleteIn[2]
+$endif
+$endif
+$c[This creates the ticket]
+$async[ticket1]
+$if[$getServerVar[ticketcategory]==]
+$createChannel[ticket-00$sum[$getServerVar[tickets];1];text]
+$else
+$createChannel[ticket-00$sum[$getServerVar[tickets];1];text;$getServerVar[ticketcategory]]
+$endif
+$endasync
+$await[ticket1]
+$c[This sends an embed into the ticket]
+$setUserVar[userticket;$channelID[ticket-00$sum[$getServerVar[tickets];1]]]
+$c[This changes the ticket description, don't touch this, or the code may break]
+$if[$getServerVar[ticketcategory]!=]
+$modifyChannel[$channelID[ticket-00$sum[$getServerVar[tickets];1]];!unchanged;Ticket opened by "$username[$authorID]#$discriminator[$authorID]";no;!unchanged]
+$else
+$modifyChannel[$channelID[ticket-00$sum[$getServerVar[tickets];1]];!unchanged;Ticket opened by "$username[$authorID]#$discriminator[$authorID]";no;!unchanged;$getServerVar[ticketcategory]]
+$endif
+$c[This sets the ticket permissions]
+$modifyChannelPerms[$channelID[ticket-00$sum[$getServerVar[tickets];1]];-readmessages;$guildID] $c[This deny the permission to view the ticket to everyone]
+$editChannelPerms[$channelID[ticket-00$sum[$getServerVar[tickets];1]];$authorID;+readmessages;+sendmessages]
+$if[$roleExists[$getServerVar[ticketstaff]]==true] $c[This checks if the staff role has been set... and if it exists then...]
+$modifyChannelPerms[$channelID[ticket-00$sum[$getServerVar[tickets];1]];+readmessages;$getServerVar[ticketstaff]] $c[This allows the permission to view the ticket to the staff role]
+$endif
+$c[This sets the tickets amount variable, it's more important than you think so don't delete it :)]
+$setServerVar[tickets;$sum[$getServerVar[tickets];1]]
+$endif
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TICKET OPEN LOG
+Trigger: $onInteraction
+Code:
+$nomention
+
+$replyIn[4]
+
+$if[$customID==Support]
+$sendEmbedMessage[$channelID[ticket-00$getServerVar[tickets]];;General Support Ticket;;$getServerVar[des];ff0000;;;Run the command !close to close the ticket;;$serverIcon;https://i.imgur.com/YxlQphp.png;$addTimestamp] $c[don't delete this, it's actually important]
+$sendEmbedMessage[$getUserVar[log];;General Support Ticket has been Created!;;
+**Ticket Name: $channelName[$channelID[ticket-00$getServerVar[tickets]]]**
+**Created by: <@$authorID>**
+**Ticket:** <#$channelID[ticket-00$getServerVar[tickets]]>
+**Reason:** _General Support_
+;00ff00;;;$username;;$serverIcon;https://i.imgur.com/YxlQphp.png;$addTimestamp]
+
+$onlyIf[2==5;Hey **$username[$authorID]**! you already own a open ticket, please move to <#$getUserVar[userticket]>]
+$endif
+
+$if[$customID==Report]
+$sendEmbedMessage[$channelID[ticket-00$getServerVar[tickets]];;Player Report Ticket;;$getServerVar[des];ff0000;;;Run the command !close to close the ticket;;$serverIcon;https://i.imgur.com/YxlQphp.png;$addTimestamp]
+$sendEmbedMessage[$getUserVar[log];;General Support Ticket has been Created!;;
+**Ticket Name: $channelName[$channelID[ticket-00$getServerVar[tickets]]]**
+**Created by: <@$authorID>**
+**Ticket:** <#$channelID[ticket-00$getServerVar[tickets]]>
+**Reason:** _Report ticket_
+;00ff00;;;$username;;$serverIcon;https://i.imgur.com/YxlQphp.png;$addTimestamp]
+$onlyIf[2==5;Hey **$username[$authorID]**! you already own a open ticket, please move to <#$getUserVar[userticket]>]
+$endif
+
+$if[$customID==B-Report]
+$sendEmbedMessage[$channelID[ticket-00$getServerVar[tickets]];;Bug Report Ticket;;$getServerVar[des];ff0000;;;Run the command !close to close the ticket;;$serverIcon;https://i.imgur.com/YxlQphp.png;$addTimestamp]
+$sendEmbedMessage[$getUserVar[log];;General Support Ticket has been Created!;;
+**Ticket Name: $channelName[$channelID[ticket-00$getServerVar[tickets]]]**
+**Created by: <@$authorID>**
+**Ticket:** <#$channelID[ticket-00$getServerVar[tickets]]>
+**Reason:** _Bug Report_
+;00ff00;;;$username;;$serverIcon;https://i.imgur.com/YxlQphp.png;$addTimestamp]
+$onlyIf[2==5;Hey **$username[$authorID]**! you already own a open ticket, please move to <#$getUserVar[userticket]>]
+$endif$endif
+
+$if[$customID==Media]
+$sendEmbedMessage[$channelID[ticket-00$getServerVar[tickets]];;Media Application Ticket;;$getServerVar[des];ff0000;;;Run the command !close to close the ticket;;$serverIcon;https://i.imgur.com/YxlQphp.png;$addTimestamp]
+$sendEmbedMessage[$getUserVar[log];;General Support Ticket has been Created!;;
+**Ticket Name: $channelName[$channelID[ticket-00$getServerVar[tickets]]]**
+**Created by: <@$authorID>**
+**Ticket:** <#$channelID[ticket-00$getServerVar[tickets]]>
+**Reason:**  _Media Application_
+;00ff00;;;$username;;$serverIcon;https://i.imgur.com/YxlQphp.png;$addTimestamp]
+$onlyIf[2==5;Hey **$username[$authorID]**! you already own a open ticket, please move to <#$getUserVar[userticket]>]
+$endif
+
+$if[$customID==Appeal]
+$sendEmbedMessage[$channelID[ticket-00$getServerVar[tickets]];;Appeal Support Ticket;;$getServerVar[des];ff0000;;;Run the command !close to close the ticket;;$serverIcon;https://i.imgur.com/YxlQphp.png;$addTimestamp]
+$sendEmbedMessage[$getUserVar[log];;General Support Ticket has been Created!;;
+**Ticket Name: $channelName[$channelID[ticket-00$getServerVar[tickets]]]**
+**Created by: <@$authorID>**
+**Ticket:** <#$channelID[ticket-00$getServerVar[tickets]]>
+**Reason:** _Appeal Support_
+;00ff00;;;$username;;$serverIcon;https://i.imgur.com/YxlQphp.png;$addTimestamp]
+$onlyIf[2==5;Hey **$username[$authorID]**! you already own a open ticket, please move to <#$getUserVar[userticket]>]
+$endif
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Ephemeral MSG
+Trigger: $onInteraction
+Code:
+$nomention
+$replyIn[1]
+$ephemeral
+$if[$channelExists[$getUserVar[userticket]==false]
+$sendMessage[$onlyIf[2==5;Hey **$username[$authorID]**! you already own a open ticket, please move to <#$getUserVar[userticket]>]]]
+$deleteIn[5]
+$else
+noice
+$endif
+
+$if[2=!5]
+
+$author[New ticket!]
+$color[000000]
+$thumbnail[https://cdn.discordapp.com/attachments/899671061933740042/899676586691923988/52722-ticket.png]
+$deleteIn[5]
+
+$endif
+$endif
+
+$if[$message==Report]
+
+$sendMessage[$onlyIf[2==5;Hey **$username[$authorID]**! you already own a open ticket, please move to <#$getUserVar[userticket]>]]]
+$deleteIn[5]
+
+$if[2=!5]
+
+$author[New ticket!]
+$color[000000]
+$thumbnail[https://cdn.discordapp.com/attachments/899671061933740042/899676586691923988/52722-ticket.png]
+$deleteIn[5]
+
+$endif
+$endif
+
+$if[$message==B-Report]
+
+$sendMessage[$onlyIf[2==5;Hey **$username[$authorID]**! you already own a open ticket, please move to <#$getUserVar[userticket]>]]]
+$deleteIn[5]
+
+$if[2=!5]
+
+$author[New ticket!]
+$color[000000]
+$thumbnail[https://cdn.discordapp.com/attachments/899671061933740042/899676586691923988/52722-ticket.png]
+$deleteIn[5]
+
+$endif
+$endif
+
+$if[$message==Appeal]
+
+$sendMessage[$onlyIf[2==5;Hey **$username[$authorID]**! you already own a open ticket, please move to <#$getUserVar[userticket]>]]]
+$deleteIn[5]
+
+$if[2=!5]
+
+$author[New ticket!]
+$color[000000]
+$thumbnail[https://cdn.discordapp.com/attachments/899671061933740042/899676586691923988/52722-ticket.png]
+$deleteIn[5]
+
+$endif
+$endif
+
+$if[$message==Media]
+
+$sendMessage[$onlyIf[2==5;Hey **$username[$authorID]**! you already own a open ticket, please move to <#$getUserVar[userticket]>]]]
+$deleteIn[5]
+
+$if[2=!5]
+
+$author[New ticket!]
+$color[000000]
+$thumbnail[https://cdn.discordapp.com/attachments/899671061933740042/899676586691923988/52722-ticket.png]
+$deleteIn[5]
+
+$endif
+$endif
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+CLOSE BUTTON INTERACTION
+Trigger: $onInteraction[justclose]
+Code:
+$nomention
+$var[prefix;!]
+$if[$customID==justclose]
+$if[$getChannelVar[claimed]==0]
+$textSplit[$channelTopic;"]
+$sendEmbedMessage[$getServerVar[log];;Ticket has been Closed!;;
+**Ticket Name: $channelName[$channelID]**
+**Closed by: <@$authorID>**
+**Originally Created By:** **$splitText[2]**
+;ff0000;;;$username;;$serverIcon;https://i.imgur.com/YxlQphp.png;$addTimestamp]
+
+$deleteChannels[$channelID]
+$else
+Ticket claimed by <@$getChannelVar[claimed]>, Ticket cant be closed until its unclaimed!
+$removeButtons
+$endif
+$endif
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+PING AUTHOR AND STAFF IN TICKET
+Trigger: $onInteraction
+Code:
+$nomention
+$replyIn[5]
+$if[$customID==Support]
+$channelSendMessage[$channelID[ticket-00$getServerVar[tickets]];<@&1197491987604054108> <@$authorID>]
+$endif
+$c[Author and Staff]
+$if[$customID==Report]
+$channelSendMessage[$channelID[ticket-00$getServerVar[tickets]];<@&1197491987604054108> <@$authorID>]
+$endif
+
+$if[$customID==B-Report]
+$channelSendMessage[$channelID[ticket-00$getServerVar[tickets]];<@&1197491987604054108> <@$authorID>]
+$endif
+
+$if[$customID==Appeal]
+$channelSendMessage[$channelID[ticket-00$getServerVar[tickets]];<@&1197491987604054108> <@$authorID>]
+$endif
+
+$if[$customID==Media]
+$channelSendMessage[$channelID[ticket-00$getServerVar[tickets]];<@&1197491987604054108> <@$authorID>]
+$endif
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TICKET CLAIM:
+Trigger: !claim
+Code:
+$nomention
+$onlyForRoles[Staff;Only Staff can use this command]
+$onlyIf[$checkContains[$channelName[$channelID];ticket-00]==true;Sorry, this isn't a valid ticket.]
+$onlyIf[$getChannelVar[claimed]==0;Ticket already Claimed by <@$getChannelVar[claimed]>]
+$setChannelVar[whoclaimed;$authorID]
+$if[1==1]
+$onlyForRoles[Staff;Only Staff can use this command]
+$onlyIf[$checkContains[$channelName[$channelID];ticket-00]==true;]
+$onlyIf[$getChannelVar[claimed]==0;]
+$endif
+$if[1==1]
+$replyIn[2]
+$onlyForRoles[Staff;Only Staff can use this command]
+$onlyIf[$checkContains[$channelName[$channelID];ticket-00]==true;]
+$onlyIf[$getChannelVar[claimed]==0;]
+$endif
+$setChannelVar[claimed;$authorID]
+$description[Ticket successfully claimed by <@$authorID>]
+$setUserVar[claim;$sum[$getUserVar[claim];1]]
+$sendEmbedMessage[$getServerVar[log];;Ticket has been Claimed!;;
+**Ticket Name: $channelName[$channelID]**
+**Claimed by: <@$authorID>**
+Ticket: <#$channelID>
+;00ff00;;;$username;;$serverIcon;https://i.imgur.com/YxlQphp.png;$addTimestamp]
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+UNCLAIM A TICKET
+Trigger: !unclaim
+$nomention
+$onlyIf[$checkContains[$channelName[$channelID];ticket-00]==true;Sorry, this isn't a valid ticket.]
+$onlyIf[$authorID==$getChannelVar[claimed];Ticket can he unclaimed only by the person who claimed it!]
+$onlyForRoles[Staff; Only for Staff]
+$setChannelVar[claimed;0]
+$setChannelVar[whoclaimed;$authorID]
+$if[1==1]
+$replyIn[2]
+$onlyForRoles[Staff;Only Staff can use this command]
+$onlyIf[$checkContains[$channelName[$channelID];ticket-00]==true;]
+$onlyIf[$getChannelVar[claimed]==0;]
+$endif
+$sendEmbedMessage[$getServerVar[log];;Ticket has been Unclaimed!;;
+**Ticket Name: $channelName[$channelID]**
+**Unclaimed by: <@$authorID>**
+Ticket: <#$channelID>
+;ffff00;;;$username;;$serverIcon;https://i.imgur.com/YxlQphp.png;$addTimestamp]
+$description[Ticket unclaimed]
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+WHO CLAIMED THE GOD DAMN TICKET?
+Trigger: ?claim
+Code:
+$nomention
+$if[$getChannelVar[claimed]==0]
+Not claimed
+$else
+Ticket claimed by <@$getChannelVar[claimed]>
+$endif
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+HOW MANY TICKET I HAVE CLAIMED?
+Trigger: $claim
+Code:
+$nomention
+$ephemeral
+$title[$username[$mentioned[1;yes]] claim stats!]
+$description[
+Claims: $getUserVar[claim;$mentioned[1;yes]]
+]
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+UNCLAIM ANY TICKET
+Trigger: $unclaim
+Code:
+$nomention
+$onlyAdmin[Only admins can use this!]
+$onlyIf[$checkContains[$channelName[$channelID];ticket-00]==true;Sorry, this isn't a valid ticket.]
+$setChannelVar[claimed;0]
+$setChannelVar[whoclaimed;$authorID]
+$editChannelPerms[$channelID;$getChannelVar[whoclaimed];+sendmessages]
+$editChannelPerms[$channelID;$getServerVar[ticketstaff];+sendmessages]
+$sendEmbedMessage[$getServerVar[log];;Ticket has been Forcefully Unclaimed!;;
+**Ticket Name: $channelName[$channelID]**
+**Unclaimed by: <@$authorID>**
+Ticket: <#$channelID>
+;ff0000;;;$username;;$serverIcon;https://i.imgur.com/YxlQphp.png;$addTimestamp]
+$description[Ticket unclaimed (Forced)]
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Trigger: !close
+Code: 
+$nomention
+$onlyIf[$guildID!=; ]
+$onlyIf[$checkContains[$channelName[$channelID];ticket]==true;Sorry, this isn't a valid ticket.]
+$onlyIf[$getServerVar[ticketstaff]!=;<@$serverOwner> didnt setup the Staff Role yet!]
+$onlyIf[$getServerVar[ticketcategory]!=;<@$serverOwner> didnt setup the Ticket category yet!]
+$onlyIf[$getServerVar[log]!=;<@$serverOwner> didnt setup the ticket logs yet!]
+$onlyForRoleIDs[$getServerVar[ticketstaff];Only Staff Role can close the ticket]
+$c[Checkers: variables]
+$varExistError[ticketsystem;Please create the variable "ticketsystem" in the app, with value "no", of course without quote symbols]
+$varExistError[tickets;Please create the variable "tickets" in the app, with value "0", of course without quote symbols]
+$varExistError[ticketcategory;Please create the variable "ticketcategory" in the app, without any value]
+$varExistError[ticketstaff;Please create the variable "ticketstaff" in the app, without any value]
+$varExistError[userticket;Please create the variable "userticket" in the app, without any value]
+$c[ EDITABLE SETTINGS ]
+$var[color;FFD700] $c[ANY HEXCODE COLOUR, I USED "#ed3491" AS EXAMPLE]
+$c[ EDITABLE SETTINGS ]
+$addButton[no;justclose;Just close;danger;no;🔐]
+$author[Are you sure? pick an option]
+$description[
+Hey **$username[$authorID]#$discriminator[$authorID]** do you really want to close the ticket?
+🔐 **Just close**
+Just close the ticket, without saving any content inside it, this action can't be undone.
+]
+$thumbnail[https://cdn.discordapp.com/attachments/899671061933740042/899676586691923988/52722-ticket.png]
+$color[$var[color]]
+$footer[$username[$botID] ticket system]
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+CLAIMS LEADERBOARD
+Trigger: !ctop
+Code:
+
+
+$c[for ppl using the pastebin there should be a “copy” button on the top right simply click that and paste it into bdfd, and make sure to fill out the variables below]
+ 
+$c[// Credits: Xloxn#4050, If you publish it even though you may have modify it, you shall give me credit… or else…]
+ 
+$c[// Make sure to enable BDscript 2]
+ 
+$var[var_name;claim]$c[<====
+⚠️ Put your var name in here otherwise the code wont work ⚠️]
+ 
+$var[type;user] $c[<====
+¢setVar(var:authorID) = globalUser
+¢setUserVar(var) = user
+¢setServerVar(var) = server]
+ 
+$var[separator1;] $c[<=====
+eg: $, would look like:
+`$10,000,000` - Xloxn
+📝 Note: if you wish to do something like this `Level 10` with a “space” in between, put a space after the “separator1”]
+ 
+$var[separator2;] $c[<====
+eg: Money, would look like:
+`1,000,000` Money - Xloxn
+📝 Note: if you wish to do something like this `1,000,000 Money` with a “space” in between, put a space before the “separator2”]
+ 
+$var[1emoji;1️⃣]
+$var[2emoji;2️⃣]
+$var[3emoji;3️⃣]
+$var[4emoji;4️⃣]
+$var[5emoji;5️⃣]
+$var[6emoji;6️⃣]
+$var[7emoji;7️⃣]
+$var[8emoji;8️⃣]
+$var[9emoji;9️⃣]
+$var[10emoji;🔟]
+ 
+$nomention
+$title[$username[$botID] Staff’s Claim Leaderboard]
+$addTimestamp
+$description[
+$if[$getLeaderboardValue[$var[type];$var[var_name];asc;1;id]!=] ⠀$var[1emoji]  **$var[separator1]$numberSeparator[$getLeaderboardValue[$var[type];$var[var_name];asc;1;value];,]$var[separator2]** - $username[$getLeaderboardValue[$var[type];$var[var_name];asc;1;id]]$endif
+$if[$getLeaderboardValue[$var[type];$var[var_name];asc;2;id]!=]⠀$var[2emoji]  **$var[separator1]$numberSeparator[$getLeaderboardValue[$var[type];$var[var_name];asc;2;value];,]$var[separator2]** - $username[$getLeaderboardValue[$var[type];$var[var_name];asc;2;id]]$endif
+$if[$getLeaderboardValue[$var[type];$var[var_name];asc;3;id]!=]⠀$var[3emoji]  **$var[separator1]$numberSeparator[$getLeaderboardValue[$var[type];$var[var_name];asc;3;value];,]$var[separator2]** - $username[$getLeaderboardValue[$var[type];$var[var_name];asc;3;id]]$endif
+$if[$getLeaderboardValue[$var[type];$var[var_name];asc;4;id]!=]⠀$var[4emoji]  **$var[separator1]$numberSeparator[$getLeaderboardValue[$var[type];$var[var_name];asc;4;value];,]$var[separator2]** - $username[$getLeaderboardValue[$var[type];$var[var_name];asc;4;id]]$endif
+$if[$getLeaderboardValue[$var[type];$var[var_name];asc;5;id]!=]⠀$var[5emoji]  **$var[separator1]$numberSeparator[$getLeaderboardValue[$var[type];$var[var_name];asc;5;value];,]$var[separator2]** - $username[$getLeaderboardValue[$var[type];$var[var_name];asc;5;id]]$endif
+$if[$getLeaderboardValue[$var[type];$var[var_name];asc;6;id]!=]⠀$var[6emoji]  **$var[separator1]$numberSeparator[$getLeaderboardValue[$var[type];$var[var_name];asc;6;value];,]$var[separator2]** - $username[$getLeaderboardValue[$var[type];$var[var_name];asc;6;id]]$endif
+$if[$getLeaderboardValue[$var[type];$var[var_name];asc;7;id]!=]⠀$var[7emoji]  **$var[separator1]$numberSeparator[$getLeaderboardValue[$var[type];$var[var_name];asc;7;value];,]$var[separator2]** - $username[$getLeaderboardValue[$var[type];$var[var_name];asc;7;id]]$endif
+$if[$getLeaderboardValue[$var[type];$var[var_name];asc;8;id]!=]⠀$var[8emoji]  **$var[separator1]$numberSeparator[$getLeaderboardValue[$var[type];$var[var_name];asc;8;value];,]$var[separator2]** - $username[$getLeaderboardValue[$var[type];$var[var_name];asc;8;id]]$endif
+$if[$getLeaderboardValue[$var[type];$var[var_name];asc;9;id]!=]⠀$var[9emoji]  **$var[separator1]$numberSeparator[$getLeaderboardValue[$var[type];$var[var_name];asc;9;value];,]$var[separator2]** - $username[$getLeaderboardValue[$var[type];$var[var_name];asc;9;id]]$endif
+$if[$getLeaderboardValue[$var[type];$var[var_name];asc;10;id]!=]⠀$var[10emoji]  **$var[separator1]$numberSeparator[$getLeaderboardValue[$var[type];$var[var_name];asc;10;value];,]$var[separator2]** - $username[$getLeaderboardValue[$var[type];$var[var_name];asc;10;id]]$endif
+]
+$color[$getUserVar[color]]
+ 
+ 
+$if[$getLeaderboardValue[$var[type];$var[var_name];asc;10;value]!=]
+$var[Box;'$username[$getLeaderboardValue[$var[type];$var[var_name];asc;1;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;2;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;3;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;4;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;5;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;6;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;7;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;8;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;9;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;10;id]]']
+    $var[Value;$getLeaderboardValue[$var[type];$var[var_name];asc;1;value],$getLeaderboardValue[$var[type];$var[var_name];asc;2;value],$getLeaderboardValue[$var[type];$var[var_name];asc;3;value],$getLeaderboardValue[$var[type];$var[var_name];asc;4;value],$getLeaderboardValue[$var[type];$var[var_name];asc;5;value],$getLeaderboardValue[$var[type];$var[var_name];asc;6;value],$getLeaderboardValue[$var[type];$var[var_name];asc;7;value],$getLeaderboardValue[$var[type];$var[var_name];asc;8;value],$getLeaderboardValue[$var[type];$var[var_name];asc;9;value],$getLeaderboardValue[$var[type];$var[var_name];asc;10;value]]
+$elseif[$getLeaderboardValue[$var[type];$var[var_name];asc;9;value]!=]
+        $var[Box;'$username[$getLeaderboardValue[$var[type];$var[var_name];asc;1;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;2;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;3;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;4;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;5;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;6;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;7;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;8;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;9;id]]']
+        $var[Value;$getLeaderboardValue[$var[type];$var[var_name];asc;1;value],$getLeaderboardValue[$var[type];$var[var_name];asc;2;value],$getLeaderboardValue[$var[type];$var[var_name];asc;3;value],$getLeaderboardValue[$var[type];$var[var_name];asc;4;value],$getLeaderboardValue[$var[type];$var[var_name];asc;5;value],$getLeaderboardValue[$var[type];$var[var_name];asc;6;value],$getLeaderboardValue[$var[type];$var[var_name];asc;7;value],$getLeaderboardValue[$var[type];$var[var_name];asc;8;value],$getLeaderboardValue[$var[type];$var[var_name];asc;9;value]]
+$elseif[$getLeaderboardValue[$var[type];$var[var_name];asc;8;value]!=]
+        $var[Box;'$username[$getLeaderboardValue[$var[type];$var[var_name];asc;1;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;2;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;3;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;4;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;5;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;6;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;7;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;8;id]]']
+        $var[Value;$getLeaderboardValue[$var[type];$var[var_name];asc;1;value],$getLeaderboardValue[$var[type];$var[var_name];asc;2;value],$getLeaderboardValue[$var[type];$var[var_name];asc;3;value],$getLeaderboardValue[$var[type];$var[var_name];asc;4;value],$getLeaderboardValue[$var[type];$var[var_name];asc;5;value],$getLeaderboardValue[$var[type];$var[var_name];asc;6;value],$getLeaderboardValue[$var[type];$var[var_name];asc;7;value],$getLeaderboardValue[$var[type];$var[var_name];asc;8;value]]
+$elseif[$getLeaderboardValue[$var[type];$var[var_name];asc;7;value]!=]
+        $var[Box;'$username[$getLeaderboardValue[$var[type];$var[var_name];asc;1;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;2;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;3;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;4;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;5;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;6;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;7;id]]']
+        $var[Value;$getLeaderboardValue[$var[type];$var[var_name];asc;1;value],$getLeaderboardValue[$var[type];$var[var_name];asc;2;value],$getLeaderboardValue[$var[type];$var[var_name];asc;3;value],$getLeaderboardValue[$var[type];$var[var_name];asc;4;value],$getLeaderboardValue[$var[type];$var[var_name];asc;5;value],$getLeaderboardValue[$var[type];$var[var_name];asc;6;value],$getLeaderboardValue[$var[type];$var[var_name];asc;7;value]]
+$elseif[$getLeaderboardValue[$var[type];$var[var_name];asc;6;value]!=]
+        $var[Box;'$username[$getLeaderboardValue[$var[type];$var[var_name];asc;1;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;2;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;3;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;4;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;5;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;6;id]]']
+        $var[Value;$getLeaderboardValue[$var[type];$var[var_name];asc;1;value],$getLeaderboardValue[$var[type];$var[var_name];asc;2;value],$getLeaderboardValue[$var[type];$var[var_name];asc;3;value],$getLeaderboardValue[$var[type];$var[var_name];asc;4;value],$getLeaderboardValue[$var[type];$var[var_name];asc;5;value],$getLeaderboardValue[$var[type];$var[var_name];asc;6;value]]
+$elseif[$getLeaderboardValue[$var[type];$var[var_name];asc;5;value]!=]
+        $var[Box;'$username[$getLeaderboardValue[$var[type];$var[var_name];asc;1;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;2;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;3;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;4;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;5;id]]']
+        $var[Value;$getLeaderboardValue[$var[type];$var[var_name];asc;1;value],$getLeaderboardValue[$var[type];$var[var_name];asc;2;value],$getLeaderboardValue[$var[type];$var[var_name];asc;3;value],$getLeaderboardValue[$var[type];$var[var_name];asc;4;value],$getLeaderboardValue[$var[type];$var[var_name];asc;5;value]]
+$elseif[$getLeaderboardValue[$var[type];$var[var_name];asc;4;value]!=]
+        $var[Box;'$username[$getLeaderboardValue[$var[type];$var[var_name];asc;1;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;2;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;3;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;4;id]]']
+        $var[Value;$getLeaderboardValue[$var[type];$var[var_name];asc;1;value],$getLeaderboardValue[$var[type];$var[var_name];asc;2;value],$getLeaderboardValue[$var[type];$var[var_name];asc;3;value],$getLeaderboardValue[$var[type];$var[var_name];asc;4;value]]
+$elseif[$getLeaderboardValue[$var[type];$var[var_name];asc;3;value]!=]
+        $var[Box;'$username[$getLeaderboardValue[$var[type];$var[var_name];asc;1;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;2;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;3;id]]']
+        $var[Value;$getLeaderboardValue[$var[type];$var[var_name];asc;1;value],$getLeaderboardValue[$var[type];$var[var_name];asc;2;value],$getLeaderboardValue[$var[type];$var[var_name];asc;3;value]]
+        
+$elseif[$getLeaderboardValue[$var[type];$var[var_name];asc;2;value]!=]
+        $var[Box;'$username[$getLeaderboardValue[$var[type];$var[var_name];asc;1;id]]','$username[$getLeaderboardValue[$var[type];$var[var_name];asc;2;id]]']
+        $var[Value;$getLeaderboardValue[$var[type];$var[var_name];asc;1;value],$getLeaderboardValue[$var[type];$var[var_name];asc;2;value]]
+$elseif[$getLeaderboardValue[$var[type];$var[var_name];asc;1;value]!=]
+        $var[Box;'$username[$getLeaderboardValue[$var[type];$var[var_name];asc;1;id]]']
+        $var[Value;$getLeaderboardValue[$var[type];$var[var_name];asc;1;value]]
+$else
+$description[No data available…]
+     $stop
+$endif
+$footer[May take time to update] 
+$image[https://quickchart.io/chart?w=500&h=250&bkg=white&c={type:%27bar%27,data:{labels:[$url[encode;$var[Box]]\],datasets:[{label:['Leaderboard'\],data:[$var[Value]\],borderColor:['rgb(255,99,132)','rgb(255,159,64)','rgba(255,205,88,255)','rgba(103,197,197,255)','rgba(54,162,235,255)','rgba(153,102,255,255)','rgb(112,121,223)','rgb(32,161,184)','rgb(239,40,180)'\],backgroundColor:['rgba(255,99,132,0.5)','rgba(255,159,64,0.5)','rgba(255,230,171,255)','rgba(165,223,223,255)','rgba(155,208,245,255)','rgba(204,179,255,255)','rgba(112,121,223,0.5)','rgba(32,161,184,0.5)','rgba(239,40,180,0.4)'\],borderWidth:1,}\]}}]
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+SET ANYONE'S CLAIM
+Trigger: !set-claim
+Code:
+$suppressErrors[Correct usage: **!set-claim @username amount**]
+$nomention
+$onlyForIDs[YOUR ID;❌ nice try but only whathadogdoing can use this!]
+$setUserVar[claim;$noMentionMessage;$mentioned[1]]
+$description[Claims (<@$mentioned[1]>): $noMentionMessage]
+
+Note:ADD YOUR OWN ID
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+(OPTIONAL) ANTI CLAIM INTERRUPTION
+Trigger: A-z + 9-0 (yes thats a total of 62 commands. Im a mad man)
+Code:
+$if[$and[$authorID!=$getChannelVar[claimed];$checkContains[$channelName[$channelID];ticket]==true;$hasRole[$authorID;$getServerVar[ticketstaff]]==true;$hasRole[$authorID;$getServerVar[ticketbypass]]==false]==false]
+$else
+$title[Claim detection]
+$description[<@$authorID> You cant talk in an unclaimed ticket, or someone else's claimed ticket!]
+$footer[Offender - $username | Do !claim to claim the ticket or !unclaim to unclaim it!] $addTimestamp
+$footerIcon[$authorAvatar]
+$deleteIn[7]
+$endif
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                DO NOT REPOST WITHOUT ASKING
